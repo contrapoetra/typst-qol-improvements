@@ -1,0 +1,73 @@
+name: Build Extension
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-chrome-firefox:
+    name: Build Chrome & Firefox
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build and Zip (Chrome)
+        run: npm run zip
+
+      - name: Build and Zip (Firefox)
+        run: npm run zip:firefox
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome-firefox-builds
+          path: .output/*.zip
+
+  build-safari:
+    name: Build Safari (macOS)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Safari Files
+        run: npx wxt build -b safari
+
+      - name: Convert to Safari Project
+        run: |
+          xcrun safari-web-extension-converter .output/safari-mv3 \
+            --project-location .output/safari-project \
+            --app-name "Typst QoL" \
+            --bundle-identifier "com.dim.typst-qol" \
+            --swift \
+            --no-open \
+            --no-prompt \
+            --force
+
+      - name: Zip Safari Project
+        run: zip -r .output/safari-xcode-project.zip .output/safari-project
+
+      - name: Upload Safari Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: safari-build
+          path: .output/safari-xcode-project.zip
