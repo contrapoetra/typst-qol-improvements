@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build-chrome-firefox:
     name: Build Chrome & Firefox
@@ -16,7 +19,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: "npm"
 
       - name: Install dependencies
@@ -32,7 +35,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: chrome-firefox-builds
-          path: .output/*.zip
+          path: .output/*-*.zip
 
   build-safari:
     name: Build Safari (macOS)
@@ -43,7 +46,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: "npm"
 
       - name: Install dependencies

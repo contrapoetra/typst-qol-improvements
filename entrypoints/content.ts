@@ -58,7 +58,7 @@ export default defineContentScript({
       style.textContent = `
         @font-face {
           font-family: 'Libre Baskerville';
-          src: url('${browser.runtime.getURL("/fonts/font.ttf")}') format('truetype');
+          src: url('${browser.runtime.getURL("/fonts/LibreBaskerville-VariableFont_wght.ttf")}') format('truetype');
           font-weight: 100 900;
           font-style: normal;
         }
