@@ -56,10 +56,18 @@ jobs:
         run: npm ci
 
       - name: Build Safari Files
-        run: npx wxt build -b safari
+        run: |
+          npx wxt build -b safari --debug
+          echo "Listing .output directory after build:"
+          ls -R .output/
 
       - name: Convert to Safari Project
         run: |
+          if [ ! -d ".output/safari-mv3" ]; then
+            echo "Error: .output/safari-mv3 directory was not created. Checking for alternatives..."
+            ls -R .output/
+            exit 1
+          fi
           xcrun safari-web-extension-converter .output/safari-mv3 \
             --project-location .output/safari-project \
             --app-name "Typst QoL" \
