@@ -38,7 +38,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: chrome-firefox-builds
-          path: .output/**/*.zip
+          path: .output/*.zip
 
   build-safari:
     name: Build Safari (macOS)
@@ -63,12 +63,17 @@ jobs:
 
       - name: Convert to Safari Project
         run: |
-          if [ ! -d ".output/safari-mv3" ]; then
-            echo "Error: .output/safari-mv3 directory was not created. Checking for alternatives..."
+          # Detect whether WXT built mv2 or mv3
+          SAFARI_DIR=$(ls -d .output/safari-mv* | head -n 1)
+          echo "Detected Safari build directory: $SAFARI_DIR"
+
+          if [ -z "$SAFARI_DIR" ]; then
+            echo "Error: No safari-mv* directory found in .output/"
             ls -R .output/
             exit 1
           fi
-          xcrun safari-web-extension-converter .output/safari-mv3 \
+
+          xcrun safari-web-extension-converter "$SAFARI_DIR" \
             --project-location .output/safari-project \
             --app-name "Typst QoL" \
             --bundle-identifier "com.dim.typst-qol" \
