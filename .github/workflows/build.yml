@@ -31,11 +31,14 @@ jobs:
       - name: Build and Zip (Firefox)
         run: npm run zip:firefox
 
+      - name: Debug Output
+        run: ls -R .output/
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: chrome-firefox-builds
-          path: .output/*-*.zip
+          path: .output/**/*.zip
 
   build-safari:
     name: Build Safari (macOS)
