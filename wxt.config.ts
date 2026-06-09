@@ -15,6 +15,7 @@ export default defineConfig({
         },
       },
     },
+    permissions: ["storage"],
     web_accessible_resources: [
       {
         // wxt handles the leading slash, but providing it without is often safer for glob matching
