@@ -65,7 +65,6 @@ export default defineContentScript({
         backgroundColor: "rgb(220, 38, 38)",
         color: "rgb(255, 255, 255)",
         padding: "12px 32px",
-        display: "flex",
         alignItems: "center",
         justifyContent: "center",
         borderRadius: "53px",
@@ -80,7 +79,6 @@ export default defineContentScript({
         whiteSpace: "nowrap",
         display: "none",
       });
-
       return el;
     };
 
@@ -169,34 +167,35 @@ export default defineContentScript({
             previewPane.appendChild(overlay);
           }
           overlay.style.display = visible ? "block" : "none";
-        } else {
-          if (overlay) overlay.style.display = "none";
+        }
+      } else {
+        if (overlay) overlay.style.display = "none";
 
-          let wrapper = document.querySelector(`.${TOAST_WRAPPER_CLASS}`);
-          if (!wrapper) {
-            wrapper = document.createElement("div");
-            wrapper.className = TOAST_WRAPPER_CLASS;
-            Object.assign((wrapper as HTMLElement).style, {
-              display: "flex",
-              flexDirection: "column-reverse",
-              alignItems: "center",
-              gap: "8px",
-              position: "fixed",
-              left: "0",
-              right: "0",
-              bottom: "0",
-              padding: "16px",
-              userSelect: "none",
-              pointerEvents: "none",
-              zIndex: "100000",
-            });
-            document.body.appendChild(wrapper);
-          }
+        let wrapper = document.querySelector(`.${TOAST_WRAPPER_CLASS}`);
+        if (!wrapper) {
+          wrapper = document.createElement("div");
+          wrapper.className = TOAST_WRAPPER_CLASS;
+          Object.assign((wrapper as HTMLElement).style, {
+            display: "flex",
+            flexDirection: "column-reverse",
+            alignItems: "center",
+            gap: "8px",
+            position: "fixed",
+            left: "0",
+            right: "0",
+            bottom: "0",
+            padding: "16px",
+            userSelect: "none",
+            pointerEvents: "none",
+            zIndex: "100000",
+          });
+          document.body.appendChild(wrapper);
+        }
 
-          if (!toast) {
-            toast = createToast();
-            wrapper.appendChild(toast);
-          }
+        if (!toast) {
+          toast = createToast();
+          wrapper.appendChild(toast);
+        }
 
         toast.style.display = visible ? "block" : "none";
         toast.style.transform = visible ? "translateY(0)" : "translateY(100px)";
