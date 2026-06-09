@@ -28,14 +28,16 @@ jobs:
       - name: Build and Zip (Chrome)
         run: npm run zip
 
-      - name: Debug Output
-        run: ls -R .output/
+      - name: Prepare Artifacts
+        run: |
+          mkdir -p dist
+          cp .output/*.zip dist/
 
       - name: Upload Chrome Artifact
         uses: actions/upload-artifact@v4
         with:
           name: chrome-build
-          path: .output/*.zip
+          path: dist/*.zip
           if-no-files-found: error
 
   build-firefox:
@@ -56,14 +58,16 @@ jobs:
       - name: Build and Zip (Firefox)
         run: npm run zip:firefox
 
-      - name: Debug Output
-        run: ls -R .output/
+      - name: Prepare Artifacts
+        run: |
+          mkdir -p dist
+          cp .output/*.zip dist/
 
       - name: Upload Firefox Artifact
         uses: actions/upload-artifact@v4
         with:
           name: firefox-build
-          path: .output/*.zip
+          path: dist/*.zip
           if-no-files-found: error
 
   build-safari:
