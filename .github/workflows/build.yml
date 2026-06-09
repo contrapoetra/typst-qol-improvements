@@ -32,13 +32,19 @@ jobs:
         run: npm run zip:firefox
 
       - name: Debug Output
-        run: ls -R .output/
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "Listing all zip files in project:"
+          find . -name "*.zip"
+          echo "Listing .output directory structure:"
+          ls -R .output/ || echo ".output directory not found"
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: chrome-firefox-builds
-          path: .output/*.zip
+          path: "**/*.zip"
+          if-no-files-found: error
 
   build-safari:
     name: Build Safari (macOS)
