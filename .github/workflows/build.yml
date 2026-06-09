@@ -10,8 +10,8 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
-  build-chrome-firefox:
-    name: Build Chrome & Firefox
+  build-chrome:
+    name: Build Chrome
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,22 +28,42 @@ jobs:
       - name: Build and Zip (Chrome)
         run: npm run zip
 
+      - name: Debug Output
+        run: ls -R .output/
+
+      - name: Upload Chrome Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: chrome-build
+          path: .output/*.zip
+          if-no-files-found: error
+
+  build-firefox:
+    name: Build Firefox
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Build and Zip (Firefox)
         run: npm run zip:firefox
 
       - name: Debug Output
-        run: |
-          echo "Current directory: $(pwd)"
-          echo "Listing all zip files in project:"
-          find . -name "*.zip"
-          echo "Listing .output directory structure:"
-          ls -R .output/ || echo ".output directory not found"
+        run: ls -R .output/
 
-      - name: Upload Artifacts
+      - name: Upload Firefox Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: chrome-firefox-builds
-          path: "**/*.zip"
+          name: firefox-build
+          path: .output/*.zip
           if-no-files-found: error
 
   build-safari:
